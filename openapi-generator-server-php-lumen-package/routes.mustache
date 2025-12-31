@@ -8,14 +8,17 @@
  */
 
 /**
- * NOTE: This file is auto-generated. Include it in your Lumen application:
+ * NOTE: This file is auto-generated. Include it in your Laravel application's routes file.
  *
- * In routes/web.php or bootstrap/app.php:
- *   require __DIR__ . '/path/to/this/routes.php';
+ * Example integration in routes/api.php:
  *
- * Or wrap in a route group:
- *   $router->group(['prefix' => 'api/{{baseName}}'], function() use ($router) {
- *       require __DIR__ . '/path/to/this/routes.php';
+ *   Route::group(['prefix' => 'v1', 'middleware' => ['api']], function ($router) {
+ *       require base_path('vendor/{{composerVendorName}}/{{composerPackageName}}/routes.php');
+ *   });
+ *
+ * Or for local development:
+ *   Route::group(['prefix' => 'v1', 'middleware' => ['api']], function ($router) {
+ *       require base_path('generated/php-lumen/{{packageName}}/lib/routes.php');
  *   });
  */
 
@@ -27,16 +30,32 @@
  * {{httpMethod}} {{path}}
  * Operation: {{operationId}}
  * Summary: {{summary}}
- {{#notes}}* Notes: {{notes}}{{/notes}}
+ {{#notes}}
+ * Notes: {{notes}}
+ {{/notes}}
+ {{#hasAuthMethods}}
+ * Security:
+ {{#authMethods}}
+ *   - {{name}}{{#scopes}} (scopes: {{#scopes}}{{scope}}{{^-last}}, {{/-last}}{{/scopes}}){{/scopes}}
+ {{/authMethods}}
+ {{/hasAuthMethods}}
  */
-$router->{{httpMethod}}('{{{path}}}', [
-    'as' => '{{operationId}}',
-    'uses' => function ({{#pathParams}}${{paramName}}{{^-last}}, {{/-last}}{{/pathParams}}) {
-        /** @var {{apiPackage}}\{{classname}} $handler */
-        $handler = app({{apiPackage}}\{{classname}}::class);
-        return $handler->{{operationId}}({{#pathParams}}${{paramName}}{{^-last}}, {{/-last}}{{/pathParams}}{{#queryParams}}request()->query('{{baseName}}'){{^-last}}, {{/-last}}{{/queryParams}}{{#bodyParams}}request()->all(){{^-last}}, {{/-last}}{{/bodyParams}});
-    }
-]);
+$route = $router->{{httpMethod}}('{{{path}}}', [{{invokerPackage}}\Http\Controllers\{{classname}}Controller::class, '{{operationId}}'])
+    ->name('api.{{operationId}}');
+
+{{#hasAuthMethods}}
+// Security middleware auto-attachment (based on OpenAPI security requirements)
+{{#authMethods}}
+if ($router->hasMiddlewareGroup('api.security.{{name}}')) {
+    $route->middleware('api.security.{{name}}');
+}
+{{/authMethods}}
+{{/hasAuthMethods}}
+
+// Custom operation-specific middleware (optional)
+if ($router->hasMiddlewareGroup('api.middlewareGroup.{{operationId}}')) {
+    $route->middleware('api.middlewareGroup.{{operationId}}');
+}
 
 {{/operation}}
 {{/operations}}

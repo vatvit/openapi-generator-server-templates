@@ -1,0 +1,86 @@
+{{!
+This template generates a script that will create all model files.
+Since php-lumen doesn't call model templates, we generate them via supporting files.
+}}
+#!/bin/bash
+# Auto-generated model generation script
+# This script creates all model DTO files from OpenAPI schemas
+
+set -e
+
+MODELS_DIR="$(dirname "$0")/Models"
+mkdir -p "$MODELS_DIR"
+
+{{#models}}
+{{#model}}
+# Generating {{classname}}.php
+cat > "$MODELS_DIR/{{classname}}.php" <<'MODEL_EOF'
+<?php
+
+declare(strict_types=1);
+
+namespace {{modelPackage}};
+
+{{#isEnum}}
+/**
+ * {{classname}} Enum
+{{#description}}
+ * {{{description}}}
+{{/description}}
+ */
+enum {{classname}}: string
+{
+{{#allowableValues}}
+{{#enumVars}}
+    case {{name}} = {{{value}}};
+{{/enumVars}}
+{{/allowableValues}}
+}
+{{/isEnum}}
+{{^isEnum}}
+/**
+ * {{classname}} DTO
+{{#description}}
+ * {{{description}}}
+{{/description}}
+ */
+class {{classname}}
+{
+    public function __construct(
+{{#vars}}
+{{^isNullable}}
+        public {{{dataType}}} ${{name}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}},
+{{/isNullable}}
+{{/vars}}
+{{#vars}}
+{{#isNullable}}
+        public ?{{{dataType}}} ${{name}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{^defaultValue}} = null{{/defaultValue}},
+{{/isNullable}}
+{{/vars}}
+    ) {}
+
+    public static function fromArray(array \$data): self
+    {
+        return new self(
+{{#vars}}
+            {{name}}: \$data['{{baseName}}']{{^required}} ?? null{{/required}},
+{{/vars}}
+        );
+    }
+
+    public function toArray(): array
+    {
+        return [
+{{#vars}}
+            '{{baseName}}' => \$this->{{name}},
+{{/vars}}
+        ];
+    }
+}
+{{/isEnum}}
+MODEL_EOF
+
+{{/model}}
+{{/models}}
+
+echo "✅ Generated {{models.size}} model files in $MODELS_DIR"

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * {{appName}}
  * {{#appDescription}}
@@ -27,10 +30,16 @@ namespace {{apiPackage}};
  * API contract for {{baseName}} operations
  * Implement this interface in your application to provide business logic
  *
+ * RESPONSE CONTRACT ENFORCEMENT:
+ * - Use {{invokerPackage}}\Http\Responses\{{classname}}Response factory
+ * - Factory methods enforce correct HTTP status codes from OpenAPI spec
+ * - Factory methods ensure response structures match OpenAPI schemas
+ *
  * @category Interface
  * @package  {{apiPackage}}
  * @author   OpenAPI Generator
  * @link     https://openapi-generator.tech
+ * @see {{invokerPackage}}\Http\Responses\{{classname}}Response Response factory
  */
 interface {{classname}}
 {
@@ -41,21 +50,54 @@ interface {{classname}}
      * {{summary}}{{#notes}}
      * {{{notes}}}{{/notes}}
      *
-{{#pathParams}}
-     * @param {{dataType}} ${{paramName}} {{description}} {{#required}}(required){{/required}}{{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-{{/pathParams}}
-{{#queryParams}}
-     * @param {{dataType}}|null ${{paramName}} {{description}} {{#required}}(required){{/required}}{{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-{{/queryParams}}
-{{#bodyParams}}
-     * @param {{dataType}}|null ${{paramName}} {{description}} {{#required}}(required){{/required}}{{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-{{/bodyParams}}
-     * @return \Illuminate\Http\Response HTTP response
+{{#allParams}}
+     * @param {{#isModel}}\{{{dataType}}}{{/isModel}}{{^isModel}}{{dataType}}{{/isModel}}{{^required}}|null{{/required}} ${{paramName}} {{description}} {{#required}}(required){{/required}}{{^required}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+{{/allParams}}
+     * @return \Illuminate\Http\Resources\Json\JsonResource Laravel Resource (structure enforced by OpenAPI)
+     *
+     * RETURN RESOURCE TYPE TO INDICATE RESPONSE:
+     * Use operation-specific Response Resources from {{invokerPackage}}\Http\Resources\Responses\
+     *
+     * Available Response Resources for this operation:
+{{#responses}}
+{{#dataType}}
+     * - {{classname}}_{{operationIdCamelCase}}_{{code}}Resource → HTTP {{code}}{{#description}} - {{description}}{{/description}}
+{{#headers}}
+{{#-first}}
+     *   Header properties to set:
+{{/-first}}
+{{#required}}
+     *     • ${{nameInCamelCase}} (REQUIRED) → '{{baseName}}': {{description}}
+{{/required}}
+{{^required}}
+     *     • ${{nameInCamelCase}} (optional) → '{{baseName}}': {{description}}
+{{/required}}
+{{/headers}}
+{{/dataType}}
+{{^dataType}}
+     * - {{classname}}_{{operationIdCamelCase}}_{{code}}Resource → HTTP {{code}}{{#description}} - {{description}}{{/description}}
+{{/dataType}}
+{{/responses}}
+     *
+     * Example:
+     *   $resource = new {{classname}}_{{operationIdCamelCase}}_201Resource($gameModel);
+{{#responses}}
+{{#dataType}}
+{{#headers}}
+{{#required}}
+{{#-first}}
+     *   $resource->{{nameInCamelCase}} = route('api.operation', ['id' => $gameModel->id]); // Set required header
+{{/-first}}
+{{/required}}
+{{/headers}}
+{{/dataType}}
+{{/responses}}
+     *   return $resource; // Resource sets status code and headers automatically
 {{#isDeprecated}}
      * @deprecated
 {{/isDeprecated}}
      */
-    public function {{operationId}}({{#pathParams}}${{paramName}}{{^-last}}, {{/-last}}{{/pathParams}}{{#pathParams}}{{#queryParams}}, {{/queryParams}}{{#bodyParams}}, {{/bodyParams}}{{/pathParams}}{{#queryParams}}${{paramName}} = null{{^-last}}, {{/-last}}{{/queryParams}}{{#queryParams}}{{#bodyParams}}, {{/bodyParams}}{{/queryParams}}{{#bodyParams}}${{paramName}} = null{{^-last}}, {{/-last}}{{/bodyParams}});
+    public function {{operationId}}({{#allParams}}{{#isModel}}?\{{{dataType}}}{{/isModel}}{{^isModel}}{{#isString}}{{#required}}string{{/required}}{{^required}}?string{{/required}}{{/isString}}{{#isInteger}}{{#required}}int{{/required}}{{^required}}?int{{/required}}{{/isInteger}}{{#isLong}}{{#required}}int{{/required}}{{^required}}?int{{/required}}{{/isLong}}{{#isFloat}}{{#required}}float{{/required}}{{^required}}?float{{/required}}{{/isFloat}}{{#isDouble}}{{#required}}float{{/required}}{{^required}}?float{{/required}}{{/isDouble}}{{#isBoolean}}{{#required}}bool{{/required}}{{^required}}?bool{{/required}}{{/isBoolean}}{{#isArray}}{{#required}}array{{/required}}{{^required}}?array{{/required}}{{/isArray}}{{^isString}}{{^isInteger}}{{^isLong}}{{^isFloat}}{{^isDouble}}{{^isBoolean}}{{^isArray}}mixed{{/isArray}}{{/isBoolean}}{{/isDouble}}{{/isFloat}}{{/isLong}}{{/isInteger}}{{/isString}}{{/isModel}} ${{paramName}}{{^required}} = null{{/required}}{{^-last}}, {{/-last}}{{/allParams}}): \Illuminate\Http\Resources\Json\JsonResource;
 {{^-last}}
 
 {{/-last}}
