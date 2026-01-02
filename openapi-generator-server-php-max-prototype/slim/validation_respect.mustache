@@ -1,0 +1,24 @@
+{{!
+    Slim Framework Validation Rules (using Respect/Validation)
+
+    Generates Respect/Validation rules from OpenAPI constraints.
+    Uses the SAME template variables as Laravel/Symfony.
+
+    Respect/Validation is the most popular validation library for Slim.
+    See: https://github.com/Respect/Validation
+
+    Template Variables Used:
+    - {{paramName}} - Parameter name
+    - {{#required}} - Is required
+    - {{#isString}}, {{#isInteger}}, etc. - Type checks
+    - {{#maxLength}}, {{#minLength}} - String length constraints
+    - {{#minimum}}, {{#maximum}} - Numeric constraints
+    - {{#pattern}} - Regex pattern
+    - {{#isEnum}}, {{#enumVars}} - Enum values
+}}
+use Respect\Validation\Validator as v;
+
+{{#allParams}}
+        // Validation for {{paramName}}
+        ${{paramName}}Validator = v::{{^required}}optional({{/required}}{{#isString}}stringType(){{/isString}}{{#isInteger}}intType(){{/isInteger}}{{#isLong}}intType(){{/isLong}}{{#isFloat}}floatType(){{/isFloat}}{{#isDouble}}floatType(){{/isDouble}}{{#isBoolean}}boolType(){{/isBoolean}}{{#isArray}}arrayType(){{/isArray}}{{#isEmail}}->email(){{/isEmail}}{{#isUuid}}->uuid(){{/isUuid}}{{#isUri}}->url(){{/isUri}}{{#minimum}}->min({{minimum}}){{/minimum}}{{#maximum}}->max({{maximum}}){{/maximum}}{{#minLength}}->length({{minLength}}, null){{/minLength}}{{#maxLength}}->length(null, {{maxLength}}){{/maxLength}}{{#pattern}}->regex('/{{pattern}}/'){{/pattern}}{{#isEnum}}->in([{{#allowableValues}}{{#enumVars}}{{{value}}}{{^-last}}, {{/-last}}{{/enumVars}}{{/allowableValues}}]){{/isEnum}}{{^required}}){{/required}};
+{{/allParams}}

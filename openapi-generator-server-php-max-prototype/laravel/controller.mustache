@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{invokerPackage}}\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use {{invokerPackage}}\Http\Requests\{{operationIdCamelCase}}FormRequest;
+use {{invokerPackage}}\Handlers\{{classname}}HandlerInterface;
+
+/**
+ * {{operationIdCamelCase}}Controller
+ *
+ * Laravel single-action controller for {{operationId}} operation.
+ * Auto-generated from OpenAPI specification.
+ *
+ * @generated
+ */
+final class {{operationIdCamelCase}}Controller
+{
+    public function __construct(
+        private readonly {{classname}}HandlerInterface $handler
+    ) {}
+
+    /**
+     * {{summary}}
+     *
+{{#notes}}
+     * {{notes}}
+     *
+{{/notes}}
+     * @param {{operationIdCamelCase}}FormRequest $request Validated request
+     * @return JsonResponse
+     */
+    public function __invoke({{operationIdCamelCase}}FormRequest $request{{#hasPathParams}}{{#pathParams}}, {{dataType}} ${{paramName}}{{/pathParams}}{{/hasPathParams}}): JsonResponse
+    {
+        // Extract validated data
+{{#hasBodyParam}}
+        $data = $request->validated();
+{{/hasBodyParam}}
+{{#hasQueryParams}}
+        $queryParams = $request->getQueryParams();
+{{/hasQueryParams}}
+
+        // Call handler with validated parameters
+        $result = $this->handler->{{operationId}}(
+{{#allParams}}
+{{#isBodyParam}}
+            $data{{^-last}},{{/-last}}
+{{/isBodyParam}}
+{{#isPathParam}}
+            ${{paramName}}{{^-last}},{{/-last}}
+{{/isPathParam}}
+{{#isQueryParam}}
+            $queryParams['{{paramName}}'] ?? null{{^-last}},{{/-last}}
+{{/isQueryParam}}
+{{/allParams}}
+        );
+
+        // Return response (handler returns Resource that converts to JSON)
+        return $result->response($request);
+    }
+}

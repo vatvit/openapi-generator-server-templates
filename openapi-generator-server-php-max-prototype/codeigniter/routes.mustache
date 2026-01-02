@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * CodeIgniter 4 API Routes
+ *
+ * Auto-generated from OpenAPI specification.
+ * Include in your app/Config/Routes.php file.
+ *
+ * Usage:
+ * ```php
+ * // In app/Config/Routes.php
+ * $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($routes) {
+ *     require APPPATH . 'Config/Routes/api_generated.php';
+ * });
+ * ```
+ *
+ * @see https://codeigniter.com/user_guide/incoming/routing.html
+ * @generated
+ */
+
+use CodeIgniter\Router\RouteCollection;
+
+/** @var RouteCollection $routes */
+
+{{#apiInfo}}
+{{#apis}}
+// {{classname}} routes
+{{#operations}}
+{{#operation}}
+/**
+ * {{httpMethod}} {{{path}}}
+ * {{summary}}
+{{#notes}}
+ * {{notes}}
+{{/notes}}
+{{#hasAuthMethods}}
+ *
+ * Security: {{#authMethods}}{{name}}{{^-last}}, {{/-last}}{{/authMethods}}
+{{/hasAuthMethods}}
+ */
+$routes->{{#lambda.lowercase}}{{httpMethod}}{{/lambda.lowercase}}(
+    '{{{path}}}',
+    '\{{invokerPackage}}\Controllers\{{operationIdCamelCase}}Controller::{{operationId}}',
+    ['as' => '{{operationId}}']
+);
+
+{{/operation}}
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}

@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{invokerPackage}}\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+/**
+ * ApiServiceProvider
+ *
+ * Service provider for the generated API package.
+ * Register this provider in your Laravel application's config/app.php.
+ *
+ * @generated
+ */
+class ApiServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        // Register handler interface bindings
+        // Uncomment and configure the implementations in your application:
+        //
+{{#apiInfo}}
+{{#apis}}
+        // $this->app->bind(
+        //     \{{apiPackage}}\{{classname}}HandlerInterface::class,
+        //     \App\Handlers\{{classname}}Handler::class
+        // );
+{{/apis}}
+{{/apiInfo}}
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        // Load API routes
+        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+    }
+}

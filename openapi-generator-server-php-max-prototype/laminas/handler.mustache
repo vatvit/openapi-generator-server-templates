@@ -1,0 +1,89 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{invokerPackage}}\Handler;
+
+use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use {{invokerPackage}}\InputFilter\{{operationIdCamelCase}}InputFilter;
+use {{invokerPackage}}\Service\{{classname}}ServiceInterface;
+
+/**
+ * {{operationIdCamelCase}}Handler
+ *
+ * Laminas Mezzio PSR-15 request handler for {{operationId}} operation.
+ * Auto-generated from OpenAPI specification.
+ *
+ * @see https://docs.mezzio.dev/
+ * @generated
+ */
+final class {{operationIdCamelCase}}Handler implements RequestHandlerInterface
+{
+    public function __construct(
+        private readonly {{classname}}ServiceInterface $service,
+        private readonly {{operationIdCamelCase}}InputFilter $inputFilter
+    ) {}
+
+    /**
+     * {{summary}}
+     *
+{{#notes}}
+     * {{notes}}
+     *
+{{/notes}}
+     * @param ServerRequestInterface $request PSR-7 request
+     * @return ResponseInterface PSR-7 response
+     */
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        // Extract route parameters
+{{#pathParams}}
+        ${{paramName}} = $request->getAttribute('{{paramName}}');
+{{/pathParams}}
+
+        // Prepare input data for validation
+        $inputData = [];
+{{#hasQueryParams}}
+        $inputData = array_merge($inputData, $request->getQueryParams());
+{{/hasQueryParams}}
+{{#hasBodyParam}}
+        $inputData = array_merge($inputData, (array) $request->getParsedBody());
+{{/hasBodyParam}}
+{{#pathParams}}
+        $inputData['{{paramName}}'] = ${{paramName}};
+{{/pathParams}}
+
+        // Validate input using InputFilter
+        $this->inputFilter->setData($inputData);
+
+        if (!$this->inputFilter->isValid()) {
+            return new JsonResponse(
+                [
+                    'status' => 'error',
+                    'title' => 'Validation Failed',
+                    'errors' => $this->inputFilter->getMessages(),
+                ],
+                422
+            );
+        }
+
+        // Get validated and filtered values
+        $validatedData = $this->inputFilter->getValues();
+
+        // Call service with validated parameters
+        $result = $this->service->{{operationId}}(
+{{#allParams}}
+            $validatedData['{{paramName}}'] ?? null{{^-last}},{{/-last}}
+{{/allParams}}
+        );
+
+        return new JsonResponse(
+            $result->getData(),
+            $result->getStatusCode(),
+            $result->getHeaders()
+        );
+    }
+}

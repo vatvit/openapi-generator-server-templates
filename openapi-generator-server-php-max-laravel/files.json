@@ -1,0 +1,43 @@
+{
+  "templates": {
+    "model": {
+      "template": "model.mustache",
+      "folder": "Model",
+      "suffix": ".php",
+      "enabled": true
+    },
+    "api": {
+      "template": "api.mustache",
+      "folder": "Handler",
+      "suffix": "HandlerInterface.php",
+      "enabled": true
+    },
+    "controller": {
+      "template": "controller.mustache",
+      "folder": "Http/Controllers",
+      "suffix": "Controller.php",
+      "enabled": true
+    },
+    "formrequest": {
+      "template": "formrequest.mustache",
+      "folder": "Http/Requests",
+      "suffix": "FormRequest.php",
+      "enabled": true,
+      "condition": "hasBodyParam"
+    }
+  },
+  "supporting": [
+    {
+      "template": "routes.mustache",
+      "output": "routes/api.php"
+    },
+    {
+      "template": "provider.mustache",
+      "output": "Providers/ApiServiceProvider.php"
+    },
+    {
+      "template": "composer.json.mustache",
+      "output": "composer.json"
+    }
+  ]
+}

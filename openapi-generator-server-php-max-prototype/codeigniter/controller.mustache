@@ -1,0 +1,94 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{invokerPackage}}\Controllers;
+
+use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
+use {{invokerPackage}}\Services\{{classname}}ServiceInterface;
+
+/**
+ * {{operationIdCamelCase}}Controller
+ *
+ * CodeIgniter 4 RESTful controller for {{operationId}} operation.
+ * Auto-generated from OpenAPI specification.
+ *
+ * @see https://codeigniter.com/user_guide/incoming/restful.html
+ * @generated
+ */
+class {{operationIdCamelCase}}Controller extends ResourceController
+{
+    use ResponseTrait;
+
+    protected $format = 'json';
+
+    public function __construct(
+        private readonly {{classname}}ServiceInterface $service
+    ) {}
+
+    /**
+     * {{summary}}
+     *
+{{#notes}}
+     * {{notes}}
+     *
+{{/notes}}
+{{#hasPathParams}}
+{{#pathParams}}
+     * @param {{dataType}} ${{paramName}}
+{{/pathParams}}
+{{/hasPathParams}}
+     * @return ResponseInterface
+     */
+    public function {{operationId}}({{#pathParams}}{{dataType}} ${{paramName}}{{^-last}}, {{/-last}}{{/pathParams}}): ResponseInterface
+    {
+        // Define validation rules from OpenAPI spec
+        $rules = [
+{{>validation_rules}}
+        ];
+
+        // Collect input data
+{{#hasQueryParams}}
+        $queryData = $this->request->getGet();
+{{/hasQueryParams}}
+{{#hasBodyParam}}
+        $bodyData = $this->request->getJSON(true) ?? $this->request->getPost();
+{{/hasBodyParam}}
+
+        $inputData = array_merge(
+{{#hasQueryParams}}
+            $queryData ?? [],
+{{/hasQueryParams}}
+{{#hasBodyParam}}
+            $bodyData ?? [],
+{{/hasBodyParam}}
+            []
+        );
+
+        // Validate input
+        if (!$this->validateData($inputData, $rules)) {
+            return $this->failValidationErrors($this->validator->getErrors());
+        }
+
+        // Call service with validated parameters
+        try {
+            $result = $this->service->{{operationId}}(
+{{#pathParams}}
+                ${{paramName}},
+{{/pathParams}}
+{{#queryParams}}
+                $inputData['{{paramName}}'] ?? null,
+{{/queryParams}}
+{{#hasBodyParam}}
+                $inputData
+{{/hasBodyParam}}
+            );
+
+            return $this->respond($result->getData(), $result->getStatusCode());
+        } catch (\Exception $e) {
+            return $this->failServerError($e->getMessage());
+        }
+    }
+}

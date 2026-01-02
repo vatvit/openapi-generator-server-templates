@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{controllerPackage}};
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+{{#hasBodyParam}}
+use {{requestPackage}}\{{operationIdPascalCase}}FormRequest;
+{{/hasBodyParam}}
+use {{handlerPackage}}\{{operation.baseName}}HandlerInterface;
+
+/**
+ * {{classname}}
+ *
+ * {{summary}}
+ *
+ * @generated
+ */
+class {{classname}} extends Controller
+{
+    public function __construct(
+        private readonly {{operation.baseName}}HandlerInterface $handler,
+    ) {
+    }
+
+    /**
+     * {{summary}}
+     *
+     * {{notes}}
+     *
+     * @param {{#hasBodyParam}}{{operationIdPascalCase}}FormRequest{{/hasBodyParam}}{{^hasBodyParam}}Request{{/hasBodyParam}} $request
+     * @return JsonResponse
+     */
+    public function __invoke({{#hasBodyParam}}{{operationIdPascalCase}}FormRequest{{/hasBodyParam}}{{^hasBodyParam}}Request{{/hasBodyParam}} $request): JsonResponse
+    {
+        $result = $this->handler->{{operationIdCamelCase}}(
+{{#allParams}}
+            {{paramName}}: $request->{{#isPathParam}}route('{{baseName}}'){{/isPathParam}}{{#isQueryParam}}query('{{baseName}}'){{/isQueryParam}}{{#isBodyParam}}validated(){{/isBodyParam}}{{#isHeaderParam}}header('{{baseName}}'){{/isHeaderParam}},
+{{/allParams}}
+        );
+
+        return response()->json($result);
+    }
+}

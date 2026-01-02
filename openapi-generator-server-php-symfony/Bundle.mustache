@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{invokerPackage}};
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+use {{invokerPackage}}\DependencyInjection\Compiler\{{bundleName}}ApiPass;
+
+/**
+ * {{bundleClassName}}
+ *
+ * Symfony Bundle for OpenAPI server.
+ * Auto-generated from OpenAPI specification.
+ */
+class {{bundleClassName}} extends Bundle
+{
+    public function build(ContainerBuilder $container): void
+    {
+        $container->addCompilerPass(new {{bundleName}}ApiPass());
+    }
+}

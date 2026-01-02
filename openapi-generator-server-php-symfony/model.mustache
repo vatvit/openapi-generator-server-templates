@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+{{#models}}
+{{#model}}
+namespace {{modelPackage}};
+
+use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Type;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * {{classname}}
+ *{{#description}}
+ * {{.}}
+ *{{/description}}
+ * Auto-generated model from OpenAPI specification.
+ */
+{{#isEnum}}{{>model_enum}}{{/isEnum}}
+{{^isEnum}}{{>model_generic}}{{/isEnum}}
+{{/model}}{{/models}}

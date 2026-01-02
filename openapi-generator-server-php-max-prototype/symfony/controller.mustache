@@ -1,0 +1,75 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{invokerPackage}}\Controller;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use {{invokerPackage}}\Dto\{{operationIdCamelCase}}Request;
+use {{invokerPackage}}\Handler\{{classname}}HandlerInterface;
+
+/**
+ * {{operationIdCamelCase}}Controller
+ *
+ * Symfony single-action controller for {{operationId}} operation.
+ * Auto-generated from OpenAPI specification.
+ *
+ * @generated
+ */
+#[Route('{{{path}}}', name: 'api.{{operationId}}', methods: ['{{httpMethod}}'])]
+final class {{operationIdCamelCase}}Controller
+{
+    public function __construct(
+        private readonly {{classname}}HandlerInterface $handler,
+        private readonly SerializerInterface $serializer
+    ) {}
+
+    /**
+     * {{summary}}
+     *
+{{#notes}}
+     * {{notes}}
+     *
+{{/notes}}
+{{#hasPathParams}}
+{{#pathParams}}
+     * @param {{dataType}} ${{paramName}}
+{{/pathParams}}
+{{/hasPathParams}}
+     * @return JsonResponse
+     */
+    public function __invoke(
+{{#hasBodyParam}}
+        #[MapRequestPayload] {{operationIdCamelCase}}Request $request{{#hasPathParams}},{{/hasPathParams}}
+{{/hasBodyParam}}
+{{#pathParams}}
+        {{dataType}} ${{paramName}}{{^-last}},{{/-last}}
+{{/pathParams}}
+    ): JsonResponse
+    {
+        // Call handler (request DTO is auto-populated and validated by Symfony)
+        $result = $this->handler->{{operationId}}(
+{{#allParams}}
+{{#isBodyParam}}
+            $request{{^-last}},{{/-last}}
+{{/isBodyParam}}
+{{#isPathParam}}
+            ${{paramName}}{{^-last}},{{/-last}}
+{{/isPathParam}}
+{{/allParams}}
+        );
+
+        // Serialize response
+        $json = $this->serializer->serialize($result->getData(), 'json');
+
+        return new JsonResponse(
+            $json,
+            $result->getStatusCode(),
+            $result->getHeaders(),
+            true // json already encoded
+        );
+    }
+}

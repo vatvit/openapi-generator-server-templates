@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{requestPackage}};
+
+use Illuminate\Foundation\Http\FormRequest;
+
+/**
+ * {{operationIdPascalCase}}FormRequest
+ *
+ * Form request validation for {{summary}}
+ *
+ * @generated
+ */
+final class {{operationIdPascalCase}}FormRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true; // Authorization should be handled by middleware
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+{{#bodyParam}}
+{{#vars}}
+            '{{baseName}}' => [{{#required}}'required'{{/required}}{{^required}}'sometimes'{{/required}}{{#isPrimitiveType}}, '{{#isString}}string{{/isString}}{{#isInteger}}integer{{/isInteger}}{{#isLong}}integer{{/isLong}}{{#isNumber}}numeric{{/isNumber}}{{#isBoolean}}boolean{{/isBoolean}}'{{/isPrimitiveType}}{{#isArray}}, 'array'{{/isArray}}{{#isEmail}}, 'email'{{/isEmail}}{{#isUuid}}, 'uuid'{{/isUuid}}{{#vendorExtensions.isUrl}}, 'url'{{/vendorExtensions.isUrl}}{{#vendorExtensions.hasMinLength}}, 'min:{{minLength}}'{{/vendorExtensions.hasMinLength}}{{#vendorExtensions.hasMaxLength}}, 'max:{{maxLength}}'{{/vendorExtensions.hasMaxLength}}{{#vendorExtensions.hasMinimum}}, 'min:{{minimum}}'{{/vendorExtensions.hasMinimum}}{{#vendorExtensions.hasMaximum}}, 'max:{{maximum}}'{{/vendorExtensions.hasMaximum}}{{#isEnum}}, 'in:{{vendorExtensions.enumValuesString}}'{{/isEnum}}],
+{{/vars}}
+{{/bodyParam}}
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            // Add custom error messages if needed
+        ];
+    }
+}
