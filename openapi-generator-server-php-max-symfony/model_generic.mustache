@@ -1,29 +1,5 @@
-<?php
-{{#models}}
-{{#model}}
+use Symfony\Component\Validator\Constraints as Assert;
 
-declare(strict_types=1);
-
-namespace {{modelPackage}};
-
-{{#isEnum}}
-/**
- * {{classname}}
- *
- * {{description}}
- *
- * @generated
- */
-enum {{classname}}: string
-{
-{{#allowableValues}}
-{{#enumVars}}
-    case {{{name}}} = {{{value}}};
-{{/enumVars}}
-{{/allowableValues}}
-}
-{{/isEnum}}
-{{^isEnum}}
 /**
  * {{classname}}
  *
@@ -42,6 +18,57 @@ class {{classname}}
      * @var array<mixed>{{^required}}|null{{/required}}
 {{/isArray}}
      */
+{{#required}}
+    #[Assert\NotNull]
+{{/required}}
+{{#isString}}
+{{#minLength}}
+    #[Assert\Length(min: {{minLength}}{{#maxLength}}, max: {{maxLength}}{{/maxLength}})]
+{{/minLength}}
+{{^minLength}}
+{{#maxLength}}
+    #[Assert\Length(max: {{maxLength}})]
+{{/maxLength}}
+{{/minLength}}
+{{#pattern}}
+    #[Assert\Regex(pattern: '{{pattern}}')]
+{{/pattern}}
+{{#isEmail}}
+    #[Assert\Email]
+{{/isEmail}}
+{{#isUri}}
+    #[Assert\Url]
+{{/isUri}}
+{{#isUuid}}
+    #[Assert\Uuid]
+{{/isUuid}}
+{{/isString}}
+{{#isInteger}}
+{{#minimum}}
+    #[Assert\GreaterThanOrEqual({{minimum}})]
+{{/minimum}}
+{{#maximum}}
+    #[Assert\LessThanOrEqual({{maximum}})]
+{{/maximum}}
+{{/isInteger}}
+{{#isNumber}}
+{{#minimum}}
+    #[Assert\GreaterThanOrEqual({{minimum}})]
+{{/minimum}}
+{{#maximum}}
+    #[Assert\LessThanOrEqual({{maximum}})]
+{{/maximum}}
+{{/isNumber}}
+{{#isArray}}
+{{#minItems}}
+    #[Assert\Count(min: {{minItems}}{{#maxItems}}, max: {{maxItems}}{{/maxItems}})]
+{{/minItems}}
+{{^minItems}}
+{{#maxItems}}
+    #[Assert\Count(max: {{maxItems}})]
+{{/maxItems}}
+{{/minItems}}
+{{/isArray}}
     public {{#isNullable}}?{{/isNullable}}{{^isNullable}}{{^required}}?{{/required}}{{/isNullable}}{{#isArray}}array{{/isArray}}{{#isMap}}array{{/isMap}}{{^isArray}}{{^isMap}}{{{dataType}}}{{/isMap}}{{/isArray}} ${{name}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{^required}}{{^defaultValue}} = null{{/defaultValue}}{{/required}};
 
 {{/vars}}
@@ -86,6 +113,3 @@ class {{classname}}
         ];
     }
 }
-{{/isEnum}}
-{{/model}}
-{{/models}}

@@ -1,0 +1,30 @@
+# Services Configuration
+#
+# Generated from OpenAPI specification.
+# Import this file in your Symfony config/services.yaml:
+#
+# imports:
+#     - { resource: '../vendor/{package}/config/services.yaml' }
+#
+# @generated
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Controllers
+{{#allOperations}}
+    {{controllerPackage}}\{{vendorExtensions.operationIdPascalCase}}Controller:
+        tags: ['controller.service_arguments']
+{{/allOperations}}
+
+    # Service Interface Bindings
+    # Uncomment and configure with your implementations:
+{{#apiInfo}}
+{{#apis}}
+    #
+    # {{apiPackage}}\{{classname}}ServiceInterface:
+    #     class: App\Service\{{classname}}Service
+{{/apis}}
+{{/apiInfo}}

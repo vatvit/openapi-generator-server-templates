@@ -1,0 +1,11 @@
+<?php
+{{#models}}
+{{#model}}
+
+declare(strict_types=1);
+
+namespace {{modelPackage}};
+
+{{#isEnum}}{{>model_enum}}{{/isEnum}}{{^isEnum}}{{>model_generic}}{{/isEnum}}
+{{/model}}
+{{/models}}

@@ -1,0 +1,24 @@
+# API Routes
+#
+# Generated from OpenAPI specification.
+# Import this file in your Symfony config/routes.yaml:
+#
+# api_routes:
+#     resource: '../vendor/{package}/config/routes.yaml'
+#
+# @generated
+
+{{#allOperations}}
+# {{summary}}
+{{#notes}}
+# {{notes}}
+{{/notes}}
+{{#hasAuthMethods}}
+# Security: {{#authMethods}}{{name}}{{^-last}}, {{/-last}}{{/authMethods}}
+{{/hasAuthMethods}}
+api_{{operationId}}:
+    path: {{path}}
+    controller: {{controllerPackage}}\{{vendorExtensions.operationIdPascalCase}}Controller
+    methods: [{{#vendorExtensions.isGet}}GET{{/vendorExtensions.isGet}}{{#vendorExtensions.isPost}}POST{{/vendorExtensions.isPost}}{{#vendorExtensions.isPut}}PUT{{/vendorExtensions.isPut}}{{#vendorExtensions.isPatch}}PATCH{{/vendorExtensions.isPatch}}{{#vendorExtensions.isDelete}}DELETE{{/vendorExtensions.isDelete}}]
+
+{{/allOperations}}
