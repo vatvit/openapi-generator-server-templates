@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Slim Framework Dependencies Configuration
+ *
+ * Auto-generated from OpenAPI specification.
+ * Configure these dependencies in your DI container.
+ *
+ * Usage with PHP-DI:
+ * ```php
+ * $containerBuilder = new \DI\ContainerBuilder();
+ * $containerBuilder->addDefinitions(__DIR__ . '/dependencies.php');
+ * $container = $containerBuilder->build();
+ * ```
+ *
+ * @generated
+ */
+
+use Psr\Container\ContainerInterface;
+
+return [
+{{#apiInfo}}
+{{#apis}}
+    // ============================================================
+    // {{classname}} Dependencies
+    // ============================================================
+
+    // Service Interface binding
+    // TODO: Bind your implementation class here
+    {{apiPackage}}\{{classname}}ServiceInterface::class => \DI\autowire(
+        // Replace with your implementation:
+        // \App\Service\{{classname}}Service::class
+    ),
+
+{{#operations}}
+{{#operation}}
+    // Handler: {{operationId}}
+    {{handlerPackage}}\{{operationIdCamelCase}}Handler::class => \DI\autowire()
+        ->constructorParameter('service', \DI\get({{apiPackage}}\{{classname}}ServiceInterface::class)),
+
+{{/operation}}
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}
+];

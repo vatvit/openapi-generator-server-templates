@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{apiPackage}};
+
+{{#imports}}
+use {{import}};
+{{/imports}}
+
+/**
+ * {{classname}}ServiceInterface
+ *
+ * Service interface for {{classname}} operations.
+ * Implement this interface in your application to handle business logic.
+ *
+ * @generated
+ */
+interface {{classname}}ServiceInterface
+{
+{{#operations}}
+{{#operation}}
+    /**
+     * {{summary}}
+     *
+     * {{notes}}
+     *
+{{#allParams}}
+     * @param {{dataType}}{{^required}}|null{{/required}} ${{paramName}} {{description}}
+{{/allParams}}
+     * @return mixed Response data
+     */
+    public function {{operationId}}(
+{{#allParams}}
+        {{dataType}}{{^required}}|null{{/required}} ${{paramName}}{{^required}} = null{{/required}},
+{{/allParams}}
+    ): mixed;
+
+{{/operation}}
+{{/operations}}
+}

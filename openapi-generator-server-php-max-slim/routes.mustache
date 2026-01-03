@@ -1,0 +1,54 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Slim Framework Routes
+ *
+ * Auto-generated from OpenAPI specification.
+ * Register these routes with your Slim application.
+ *
+ * Usage:
+ * ```php
+ * $app = \Slim\Factory\AppFactory::create();
+ * $container = $app->getContainer();
+ * (require __DIR__ . '/routes.php')($app, $container);
+ * $app->run();
+ * ```
+ *
+ * @generated
+ */
+
+use Psr\Container\ContainerInterface;
+use Slim\App;
+
+return function (App $app, ContainerInterface $container): void {
+{{#apiInfo}}
+{{#apis}}
+    // ============================================================
+    // {{classname}} Routes
+    // ============================================================
+{{#operations}}
+{{#operation}}
+
+    /**
+     * {{httpMethod}} {{{path}}}
+     *
+     * {{summary}}
+{{#notes}}
+     * {{notes}}
+{{/notes}}
+{{#hasAuthMethods}}
+     *
+     * Security: {{#authMethods}}{{name}}{{^-last}}, {{/-last}}{{/authMethods}}
+{{/hasAuthMethods}}
+     */
+    $app->{{#lambda.lowercase}}{{httpMethod}}{{/lambda.lowercase}}(
+        '{{{path}}}',
+        {{handlerPackage}}\{{operationIdCamelCase}}Handler::class
+    )->setName('{{operationId}}');
+{{/operation}}
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}
+};

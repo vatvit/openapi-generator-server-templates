@@ -1,0 +1,36 @@
+{
+  "templates": {
+    "model": {
+      "template": "model.mustache",
+      "folder": "Model",
+      "suffix": ".php",
+      "enabled": true
+    },
+    "api": {
+      "template": "api.mustache",
+      "folder": "Service",
+      "suffix": "ServiceInterface.php",
+      "enabled": true
+    },
+    "controller": {
+      "template": "controller.mustache",
+      "folder": "Handler",
+      "suffix": "Handler.php",
+      "enabled": true
+    }
+  },
+  "supporting": [
+    {
+      "template": "routes.mustache",
+      "output": "routes.php"
+    },
+    {
+      "template": "dependencies.mustache",
+      "output": "dependencies.php"
+    },
+    {
+      "template": "composer.json.mustache",
+      "output": "composer.json"
+    }
+  ]
+}

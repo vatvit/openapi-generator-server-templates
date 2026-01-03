@@ -1,0 +1,96 @@
+<?php
+{{#models}}
+{{#model}}
+
+declare(strict_types=1);
+
+namespace {{modelPackage}};
+
+{{#isEnum}}
+/**
+ * {{classname}}
+ *
+ * {{description}}
+ *
+ * @generated
+ */
+enum {{classname}}: string
+{
+{{#allowableValues}}
+{{#enumVars}}
+    case {{{name}}} = {{{value}}};
+{{/enumVars}}
+{{/allowableValues}}
+}
+{{/isEnum}}
+{{^isEnum}}
+/**
+ * {{classname}}
+ *
+ * {{description}}
+ *
+ * @generated
+ */
+class {{classname}}
+{
+{{#vars}}
+    /**
+{{#description}}
+     * {{description}}
+{{/description}}
+{{#isArray}}
+     * @var array<mixed>{{^required}}|null{{/required}}
+{{/isArray}}
+{{#isFreeFormObject}}
+     * @var mixed
+{{/isFreeFormObject}}
+{{#isAnyType}}
+     * @var mixed
+{{/isAnyType}}
+     */
+    public {{#isArray}}{{^required}}?{{/required}}array{{/isArray}}{{#isMap}}{{^required}}?{{/required}}array{{/isMap}}{{#isFreeFormObject}}mixed{{/isFreeFormObject}}{{#isAnyType}}mixed{{/isAnyType}}{{^isArray}}{{^isMap}}{{^isFreeFormObject}}{{^isAnyType}}{{#isNullable}}?{{/isNullable}}{{^isNullable}}{{^required}}?{{/required}}{{/isNullable}}{{{dataType}}}{{/isAnyType}}{{/isFreeFormObject}}{{/isMap}}{{/isArray}} ${{name}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{^required}}{{^defaultValue}} = null{{/defaultValue}}{{/required}};
+
+{{/vars}}
+    /**
+     * Constructor
+     *
+     * @param array<string, mixed> $data Named parameters
+     */
+    public function __construct(array $data = [])
+    {
+{{#vars}}
+        $this->{{name}} = $data['{{name}}'] ?? {{#defaultValue}}{{{defaultValue}}}{{/defaultValue}}{{^defaultValue}}{{#required}}throw new \InvalidArgumentException('Missing required parameter: {{name}}'){{/required}}{{^required}}null{{/required}}{{/defaultValue}};
+{{/vars}}
+    }
+
+    /**
+     * Create from array (JSON data with original keys)
+     *
+     * @param array<string, mixed> $data
+     */
+    public static function fromArray(array $data): self
+    {
+        return new self([
+{{#vars}}
+            '{{name}}' => $data['{{baseName}}'] ?? {{#defaultValue}}{{{defaultValue}}}{{/defaultValue}}{{^defaultValue}}null{{/defaultValue}},
+{{/vars}}
+        ]);
+    }
+
+    /**
+     * Convert to array
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return [
+{{#vars}}
+            '{{baseName}}' => $this->{{name}},
+{{/vars}}
+        ];
+    }
+}
+{{/isEnum}}
+{{/model}}
+{{/models}}
