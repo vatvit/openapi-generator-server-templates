@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
  * Security: {{#authMethods}}{{name}}{{^-last}}, {{/-last}}{{/authMethods}}
 {{/hasAuthMethods}}
  */
-Route::{{#vendorExtensions.isGet}}get{{/vendorExtensions.isGet}}{{#vendorExtensions.isPost}}post{{/vendorExtensions.isPost}}{{#vendorExtensions.isPut}}put{{/vendorExtensions.isPut}}{{#vendorExtensions.isPatch}}patch{{/vendorExtensions.isPatch}}{{#vendorExtensions.isDelete}}delete{{/vendorExtensions.isDelete}}('{{path}}', \{{controllerPackage}}\{{vendorExtensions.operationIdPascalCase}}Controller::class)
+Route::{{#vendorExtensions.isGet}}get{{/vendorExtensions.isGet}}{{#vendorExtensions.isPost}}post{{/vendorExtensions.isPost}}{{#vendorExtensions.isPut}}put{{/vendorExtensions.isPut}}{{#vendorExtensions.isPatch}}patch{{/vendorExtensions.isPatch}}{{#vendorExtensions.isDelete}}delete{{/vendorExtensions.isDelete}}('{{path}}', \{{invokerPackage}}\Api\Http\Controllers\{{vendorExtensions.operationIdPascalCase}}Controller::class)
     ->name('api.{{operationId}}');
 
 {{/allOperations}}

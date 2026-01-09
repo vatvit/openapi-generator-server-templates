@@ -26,13 +26,23 @@ interface {{classname}}HandlerInterface
      * {{notes}}
      *
 {{#allParams}}
-     * @param {{dataType}} ${{paramName}} {{description}}
+{{#isArray}}
+     * @param array<{{items.dataType}}>{{^required}}|null{{/required}} ${{paramName}} {{description}}
+{{/isArray}}
+{{^isArray}}
+     * @param {{dataType}}{{^required}}|null{{/required}} ${{paramName}} {{description}}
+{{/isArray}}
 {{/allParams}}
      * @return mixed
      */
     public function {{operationId}}(
 {{#allParams}}
-        {{dataType}} ${{paramName}},
+{{#isArray}}
+        ?array ${{paramName}},
+{{/isArray}}
+{{^isArray}}
+        {{dataType}}{{^required}}|null{{/required}} ${{paramName}},
+{{/isArray}}
 {{/allParams}}
     );
 
